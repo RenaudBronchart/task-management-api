@@ -5,6 +5,7 @@ import com.example.taskmanagementapi.entity.Task;
 import com.example.taskmanagementapi.mapper.TaskMapper;
 import com.example.taskmanagementapi.mapper.UserMapper;
 import com.example.taskmanagementapi.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class TaskController {
     }
 
     @PostMapping()
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO){
+    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO){
 
         Task task = taskMapper.toEntity(taskDTO);
         Task savedTask = taskService.createTask(task, taskDTO.getUserId());
@@ -51,7 +52,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> updateTask(@Valid @PathVariable Long id, @RequestBody TaskDTO taskDTO) {
 
     Task task = taskMapper.toEntity(taskDTO);
     Task updatedTasked = taskService.updateTask(id,task);

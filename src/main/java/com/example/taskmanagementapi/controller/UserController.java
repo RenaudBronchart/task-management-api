@@ -4,6 +4,7 @@ import com.example.taskmanagementapi.dto.UserDTO;
 import com.example.taskmanagementapi.entity.User;
 import com.example.taskmanagementapi.mapper.UserMapper;
 import com.example.taskmanagementapi.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
 
         User user = userMapper.toEntity(userDTO);
 
@@ -53,6 +54,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(
+            @Valid
             @PathVariable Long id,
             @RequestBody UserDTO userDTO
     ) {
