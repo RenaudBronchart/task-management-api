@@ -44,7 +44,7 @@ public class TaskController {
     public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO){
 
         Task task = taskMapper.toEntity(taskDTO);
-        Task savedTask = taskService.createTask(task);
+        Task savedTask = taskService.createTask(task, taskDTO.getUserId());
 
         return ResponseEntity.status(201).body(taskMapper.toDTO(savedTask));
 
