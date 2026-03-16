@@ -36,11 +36,8 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTask(@PathVariable Long id) {
-
-        return  taskService.getTaskById(id)
-                .map(taskMapper::toDTO)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Task task = taskService.getTaskById(id);
+        return ResponseEntity.ok(taskMapper.toDTO(task));
     }
 
     @PostMapping()

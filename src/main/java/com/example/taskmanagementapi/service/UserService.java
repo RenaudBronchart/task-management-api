@@ -1,6 +1,7 @@
 package com.example.taskmanagementapi.service;
 
 import com.example.taskmanagementapi.entity.User;
+import com.example.taskmanagementapi.exception.ResourceNotFoundException;
 import com.example.taskmanagementapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,9 @@ public class UserService {
     public UserService(UserRepository userRepository) {this.userRepository = userRepository;}
 
     public List<User> getAllUsers() { return userRepository.findAll(); }
-    public Optional<User> getUserById(Long id) { return userRepository.findById(id); }
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("User not found"));
+    }
     public User createUser(User user) { return userRepository.save(user); }
 
     public User updateUser(Long id, User userDetails) {

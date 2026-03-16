@@ -35,11 +35,10 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+        User user = userService.getUserById(id);
 
-        return userService.getUserById(id)
-                .map(userMapper::toDTO)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(userMapper.toDTO(user));
+
     }
 
     @PostMapping
