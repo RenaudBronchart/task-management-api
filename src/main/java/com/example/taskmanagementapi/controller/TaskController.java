@@ -5,6 +5,8 @@ import com.example.taskmanagementapi.entity.Task;
 import com.example.taskmanagementapi.mapper.TaskMapper;
 import com.example.taskmanagementapi.mapper.UserMapper;
 import com.example.taskmanagementapi.service.TaskService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,15 +25,13 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDTO>> getTasks() {
+    public ResponseEntity<Page<TaskDTO>> getTasks(Pageable pageable) {
 
-        List<Task> tasks = taskService.getAllTasks();
+        Page<Task> tasks = taskService.getAllTasks(pageable);
 
-        List<TaskDTO> taskDTOs = tasks.stream()
-                .map(taskMapper::toDTO)
-                .toList();
+        Page<TaskDTO> dtoPage = tasks.map(taskMapper::toDTO);
 
-        return ResponseEntity.ok(taskDTOs);
+        return ResponseEntity.ok(dtoPage);
     }
 
     @GetMapping("/{id}")

@@ -6,6 +6,8 @@ import com.example.taskmanagementapi.entity.User;
 import com.example.taskmanagementapi.exception.ResourceNotFoundException;
 import com.example.taskmanagementapi.repository.TaskRepository;
 import com.example.taskmanagementapi.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
-    public List<Task> getAllTasks() {return taskRepository.findAll();}
+    public Page<Task> getAllTasks(Pageable pageable) {return taskRepository.findAll(pageable);}
 
     public Task getTaskById(Long id) {
         return taskRepository.findById(id).orElseThrow(
