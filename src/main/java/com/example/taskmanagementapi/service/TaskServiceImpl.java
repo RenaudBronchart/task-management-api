@@ -59,5 +59,5 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.deleteById(id);
     }
 
-    String status = "OPEN";
+    String status = "CLOSED";
 }
