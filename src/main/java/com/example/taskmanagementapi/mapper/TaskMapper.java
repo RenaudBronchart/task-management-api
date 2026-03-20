@@ -1,16 +1,19 @@
 package com.example.taskmanagementapi.mapper;
 
-import com.example.taskmanagementapi.dto.TaskDTO;
+import com.example.taskmanagementapi.dto.TaskDto;
 import com.example.taskmanagementapi.entity.Task;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TaskMapper {
 
-    public TaskDTO toDTO(Task task) {
+    public TaskDto toDto(Task task) {
 
-        TaskDTO dto = new TaskDTO();
-        dto.setId(task.getId());
+        if(task == null) {
+            return null;
+        }
+
+        TaskDto dto = new TaskDto();
         dto.setTitle(task.getTitle());
         dto.setDescription(task.getDescription());
         if (task.getUser() != null) {
@@ -19,15 +22,26 @@ public class TaskMapper {
 
         return dto;
     }
-    public Task toEntity(TaskDTO dto) {
+    public Task toEntity(TaskDto dto) {
+        if( dto == null) {
+            return null;
+        }
 
         Task task = new Task();
-        task.setId(dto.getId());
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
 
         return task;
     }
+
+    public void updateEntity(Task task, TaskDto dto) {
+            if (task == null || dto == null) {
+        return;
+    }
+
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+}
 
 
 }

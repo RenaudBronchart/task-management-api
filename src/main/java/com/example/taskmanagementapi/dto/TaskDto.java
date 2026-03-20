@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class TaskDTO {
+public class TaskDto {
 
     private Long id;
 

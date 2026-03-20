@@ -1,63 +1,49 @@
 package com.example.taskmanagementapi.controller;
 
-import com.example.taskmanagementapi.dto.TaskDTO;
-import com.example.taskmanagementapi.entity.Task;
-import com.example.taskmanagementapi.mapper.TaskMapper;
-import com.example.taskmanagementapi.mapper.UserMapper;
+import com.example.taskmanagementapi.dto.TaskDto;
 import com.example.taskmanagementapi.service.TaskService;
+import com.example.taskmanagementapi.service.TaskServiceImpl;
+import com.example.taskmanagementapi.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping ("/tasks")
 public class TaskController {
 
     private final TaskService taskService;
-    private final TaskMapper taskMapper;
+    private final UserService userService;
 
-    public TaskController (TaskService taskService, TaskMapper taskMapper) {
+    public TaskController (TaskService taskService, UserService userService) {
         this.taskService = taskService;
-        this.taskMapper = taskMapper;
+        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<Page<TaskDTO>> getTasks(Pageable pageable) {
-
-        Page<Task> tasks = taskService.getAllTasks(pageable);
-
-        Page<TaskDTO> dtoPage = tasks.map(taskMapper::toDTO);
-
-        return ResponseEntity.ok(dtoPage);
+    public ResponseEntity<Page<TaskDto>> getTasks(Pageable pageable) {
+        return ResponseEntity.ok(taskService.getAllTasks(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTask(@PathVariable Long id) {
-        Task task = taskService.getTaskById(id);
-        return ResponseEntity.ok(taskMapper.toDTO(task));
+    public ResponseEntity<TaskDto> getTask(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
     @PostMapping()
-    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO){
-
-        Task task = taskMapper.toEntity(taskDTO);
-        Task savedTask = taskService.createTask(task, taskDTO.getUserId());
-
-        return ResponseEntity.status(201).body(taskMapper.toDTO(savedTask));
+    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto){
+        return ResponseEntity.status(201).body(taskService.createTask(taskDto));
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@Valid @PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDto> updateTask(
+            @Valid @PathVariable Long id,
+            @RequestBody TaskDto taskDto) {
 
-    Task task = taskMapper.toEntity(taskDTO);
-    Task updatedTasked = taskService.updateTask(id,task);
-
-    return ResponseEntity.ok(taskMapper.toDTO(updatedTasked));
+    return ResponseEntity.ok(taskService.updateTask(id,taskDto));
     }
 
     @DeleteMapping("/{id}")
