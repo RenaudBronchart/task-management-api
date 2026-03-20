@@ -1,15 +1,20 @@
 package com.example.taskmanagementapi.mapper;
 
-import com.example.taskmanagementapi.dto.UserDTO;
+import com.example.taskmanagementapi.dto.UserDto;
 import com.example.taskmanagementapi.entity.User;
+import com.example.taskmanagementapi.exception.ResourceNotFoundException;
+import com.example.taskmanagementapi.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public UserDTO toDTO(User user) {
+    public UserDto toDto(User user) {
+        if (user == null) {
+            return null;
+        }
 
-        UserDTO dto = new UserDTO();
+        UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
@@ -17,12 +22,24 @@ public class UserMapper {
         return dto;
     }
 
-    public User toEntity(UserDTO dto) {
+    public User toEntity(UserDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
         User user = new User();
-        user.setId(dto.getId());
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
+
         return user;
     }
 
+    public void updateEntity(User user, UserDto dto) {
+        if (user == null || dto == null) {
+            return;
+        }
+
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+    }
 }
