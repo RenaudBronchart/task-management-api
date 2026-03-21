@@ -1,6 +1,5 @@
 package com.example.taskmanagementapi.exception;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
 
 
 public class ResourceNotFoundException extends RuntimeException {
@@ -8,5 +7,4 @@ public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
         super(message);
     }
-
 }
