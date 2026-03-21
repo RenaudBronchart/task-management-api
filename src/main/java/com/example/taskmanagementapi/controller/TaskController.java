@@ -1,9 +1,8 @@
 package com.example.taskmanagementapi.controller;
 
 import com.example.taskmanagementapi.dto.TaskDto;
+import com.example.taskmanagementapi.response.ApiResponse;
 import com.example.taskmanagementapi.service.TaskService;
-import com.example.taskmanagementapi.service.TaskServiceImpl;
-import com.example.taskmanagementapi.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,47 +10,72 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping ("/tasks")
+@RequestMapping("/tasks")
 public class TaskController {
 
     private final TaskService taskService;
-    private final UserService userService;
 
-    public TaskController (TaskService taskService, UserService userService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
-        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<Page<TaskDto>> getTasks(Pageable pageable) {
-        return ResponseEntity.ok(taskService.getAllTasks(pageable));
+    public ResponseEntity<ApiResponse<Page<TaskDto>>> getTasks(Pageable pageable) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        taskService.getAllTasks(pageable),
+                        "Tasks retrieved successfully",
+                        200
+                )
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDto> getTask(@PathVariable Long id) {
-        return ResponseEntity.ok(taskService.getTaskById(id));
+    public ResponseEntity<ApiResponse<TaskDto>> getTask(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        taskService.getTaskById(id),
+                        "Task retrieved successfully",
+                        200
+                )
+        );
     }
 
-    @PostMapping()
-    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto){
-        return ResponseEntity.status(201).body(taskService.createTask(taskDto));
-
+    @PostMapping
+    public ResponseEntity<ApiResponse<TaskDto>> createTask(@Valid @RequestBody TaskDto taskDto) {
+        return ResponseEntity.status(201).body(
+                new ApiResponse<>(
+                        taskService.createTask(taskDto),
+                        "Task created successfully",
+                        201
+                )
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDto> updateTask(
-            @Valid @PathVariable Long id,
-            @RequestBody TaskDto taskDto) {
-
-    return ResponseEntity.ok(taskService.updateTask(id,taskDto));
+    public ResponseEntity<ApiResponse<TaskDto>> updateTask(
+            @PathVariable Long id,
+            @Valid @RequestBody TaskDto taskDto
+    ) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        taskService.updateTask(id, taskDto),
+                        "Task updated successfully",
+                        200
+                )
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id)
-    {
+    public ResponseEntity<ApiResponse<Void>> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        null,
+                        "Task deleted successfully",
+                        200
+                )
+        );
     }
-
 }

@@ -3,6 +3,7 @@ package com.example.taskmanagementapi.controller;
 import com.example.taskmanagementapi.dto.UserDto;
 import com.example.taskmanagementapi.entity.User;
 import com.example.taskmanagementapi.mapper.UserMapper;
+import com.example.taskmanagementapi.response.ApiResponse;
 import com.example.taskmanagementapi.service.UserService;
 import com.example.taskmanagementapi.service.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -22,31 +23,61 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<ApiResponse<List<UserDto>>> getUsers() {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        userService.getAllUsers(),
+                        "Users retrieved successfully",
+                        200
+                )
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<ApiResponse<UserDto>> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        userService.getUserById(id),
+                        "User retrieved successfully",
+                        200
+                )
+        );
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userService.createUser(userDto));
+    public ResponseEntity<ApiResponse<UserDto>> createUser(@Valid @RequestBody UserDto userDto) {
+        return ResponseEntity.status(201).body(
+                new ApiResponse<>(
+                        userService.createUser(userDto),
+                        "User created successfully",
+                        201
+                )
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(
+    public ResponseEntity<ApiResponse<UserDto>> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserDto userDto
     ) {
-        return ResponseEntity.ok(userService.updateUser(id, userDto));
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        userService.updateUser(id, userDto),
+                        "User updated successfully",
+                        200
+                )
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        null,
+                        "User deleted successfully",
+                        200
+                )
+        );
     }
 }
