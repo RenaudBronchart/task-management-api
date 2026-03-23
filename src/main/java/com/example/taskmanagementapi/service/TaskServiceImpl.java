@@ -3,6 +3,8 @@ package com.example.taskmanagementapi.service;
 import com.example.taskmanagementapi.dto.TaskDto;
 import com.example.taskmanagementapi.entity.Task;
 
+import com.example.taskmanagementapi.entity.User;
+import com.example.taskmanagementapi.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.taskmanagementapi.exception.ResourceNotFoundException;
@@ -16,12 +18,14 @@ import org.springframework.stereotype.Service;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
     private final TaskMapper taskMapper;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper){
+    public TaskServiceImpl(TaskRepository taskRepository,UserRepository userRepository, TaskMapper taskMapper){
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
         this.taskMapper = taskMapper;
     }
 
@@ -49,6 +53,10 @@ public class TaskServiceImpl implements TaskService {
         log.info("Creating task with title {}", taskDto.getTitle());
 
         Task task = taskMapper.toEntity(taskDto);
+        User user = userRepository.findById(taskDto.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        task.setUser(user);
         Task savedTask = taskRepository.save(task);
 
         log.info("Task created with id {}", savedTask.getId());

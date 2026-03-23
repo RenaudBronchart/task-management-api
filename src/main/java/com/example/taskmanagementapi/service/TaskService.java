@@ -1,7 +1,6 @@
 package com.example.taskmanagementapi.service;
 
 import com.example.taskmanagementapi.dto.TaskDto;
-import com.example.taskmanagementapi.entity.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
