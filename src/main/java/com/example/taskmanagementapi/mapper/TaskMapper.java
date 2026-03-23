@@ -14,6 +14,7 @@ public class TaskMapper {
         }
 
         TaskDto dto = new TaskDto();
+        dto.setId(task.getId());
         dto.setTitle(task.getTitle());
         dto.setDescription(task.getDescription());
         if (task.getUser() != null) {
